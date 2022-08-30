@@ -5,33 +5,38 @@ module.exports = {
   createuser: (data, callBack) => {
     pool.query("SELECT username FROM users WHERE Username= ?", [data.Username], function (err, rows,fields){
       if (err) throw err;
-      if (rows && rows.length) {
-        console.log(rows[0].Username+" already exists");
+      if (rows.length) {
+        console.log(rows[0].username+" already exists");
+        //username starts with small letter auto in db 
+        return callBack(null, rows[0].username+" already exists");
       }
       else{
         console.log('Success...');
+        pool.query(
+          `insert into users(FirstName,LastName,Username,email,password,RoleID,isPremium ) 
+          values(?,?,?,?,?,?,?)`,
+          [
+            data.FirstName,
+            data.LastName,
+            data.Username,
+            data.email,
+            data.password,
+            data.RoleID,
+            data.IsPremium,
+          ],
+          (error, results, fields) => {
+            if (error) {
+              callBack(error);
+            }
+            return callBack(null, "Signup Successfully");
+          }
+          );
       }
     });
-    pool.query(
-      `insert into users(FirstName,LastName,Username,email,password,RoleID,isPremium ) 
-      values(?,?,?,?,?,?,?)`,
-      [
-        data.FirstName,
-        data.LastName,
-        data.Username,
-        data.email,
-        data.password,
-        data.RoleID,
-        data.IsPremium,
-      ],
-      (error, results, fields) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results);
-      }
-      );
+   
     },
+
+
     loginuserbyemail: (email, callBack) => {
       pool.query(
         `select FirstName,LastName,Username,email,password,IsPremium from users where email = ?`,

@@ -63,8 +63,7 @@ module.exports = {
       }
       return res.status(200).json({
         success: 1,
-        message: "Signup successfully",
-        // data: results
+        message: results,
       });
     });
   },

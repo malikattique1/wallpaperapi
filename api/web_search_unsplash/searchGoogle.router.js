@@ -22,7 +22,7 @@ router.get('/search', (request, response) => {
         .then(results => {
             response.status(200);
             response.json(results);
-            return
+            // return
             queryPromise1 = () =>{
                 return new Promise((resolve, reject)=>{
                     pool.query('select id,title,description,thumbnail_path,tags from wallpaper',  (error, results)=>{
